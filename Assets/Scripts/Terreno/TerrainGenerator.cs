@@ -6,26 +6,26 @@ public class TerrainGenerator : MonoBehaviour
 {
     public GameObject chunk;
 
-    [HideInInspector] public static int chunkLength = 50;
-    [HideInInspector] public static float noiseScale = 45;
+    public int chunkLength = 50;
+    public float noiseScale = 45;
 
     //PLANOS en escala 5*****
 
     //x= -units / 45
 
-    [HideInInspector] public static int octaves = 3;
-    [HideInInspector] public static float persistance = 0.4f;
-    [HideInInspector] public static float lacunarity = 1.3f;
+    public int octaves = 3;
+    public float persistance = 0.4f;
+    public float lacunarity = 1.3f;
 
-    [HideInInspector] public static int seed1; //hacer aleatorias
-    [HideInInspector] public static int seed2;
+    public int seed1; //hacer aleatorias
+    public int seed2;
     //no tiene offset
 
-    [HideInInspector] public static float cut = 0.4f;
-    [HideInInspector] public static float range = 0.05f;
+    public float cut = 0.4f;
+    public float range = 0.05f;
 
-    [HideInInspector] public int createRange = 5;
-    [HideInInspector] public int destroyRange = 6; //lo que hay que alejarse para eliminar un chunk
+    public int createRange = 5;
+    public int destroyRange = 6; //lo que hay que alejarse para eliminar un chunk
 
     public Transform playerTransform;
     [HideInInspector] public Vector2 lastChunkPosition;
@@ -62,7 +62,7 @@ public class TerrainGenerator : MonoBehaviour
         if (!chunksArr.ContainsKey(new Vector2(x, z)))
         {
             GameObject newChunk = Instantiate(chunk, transform.position + new Vector3(x, 0f, z), transform.rotation);
-            newChunk.GetComponent<TerrainChunk>().SetChunkValues(new Vector2(-newChunk.transform.position.x / 45f, -newChunk.transform.position.z / 45f));
+            newChunk.GetComponent<TerrainChunk>().SetChunkValues(this, new Vector2(-newChunk.transform.position.x / 45f, -newChunk.transform.position.z / 45f));
 
             chunksArr.Add(new Vector2(x, z), newChunk);
         }

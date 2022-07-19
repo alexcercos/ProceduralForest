@@ -23,7 +23,7 @@ public class TerrainChunk : MonoBehaviour
     [NonReorderable] public TerrainObject[] treeObjects;
 
     Renderer textureRenderer;
-    float[,] values = new float[TerrainGenerator.chunkLength, TerrainGenerator.chunkLength];
+    float[,] values;
     Vector2 chunkOffset;
 
     float grassLimit = 0.05f;
@@ -33,18 +33,22 @@ public class TerrainChunk : MonoBehaviour
     Color grassColorInit = new Color(60f / 255f, 147f / 255f, 20f / 255f);
     Color grassColorEnd = new Color(15f / 255f, 120f / 255f, 60f / 255f);
 
+    TerrainGenerator gen;
+
     public void Awake()
     {
         textureRenderer = GetComponent<Renderer>();
     }
 
-    public void SetChunkValues(Vector2 offset)
+    public void SetChunkValues(TerrainGenerator generator, Vector2 offset)
     {
         chunkOffset = offset;
 
+        gen = generator;
+
+        values = new float[gen.chunkLength, gen.chunkLength];
 
         StartCoroutine(ValuesParallel());
-        
     }
     
     private void OnValidate()
@@ -116,26 +120,26 @@ public class TerrainChunk : MonoBehaviour
         float multiplier = 1f;// - Mathf.Clamp((Vector3.Distance(transform.position, Vector3.zero) - 0.9f * 500f) * 10f / 500f, 0f, 1f);
 
         //seeds, scale, octaves, persistance, lacunarity
-        float[,] noiseMap1 = Noise.GenerateNoiseMap(TerrainGenerator.chunkLength, TerrainGenerator.chunkLength,
-            TerrainGenerator.seed1, TerrainGenerator.noiseScale,
-            TerrainGenerator.octaves, TerrainGenerator.persistance, TerrainGenerator.lacunarity, chunkOffset);
-        float[,] noiseMap2 = Noise.GenerateNoiseMap(TerrainGenerator.chunkLength, TerrainGenerator.chunkLength,
-            TerrainGenerator.seed2, TerrainGenerator.noiseScale,
-            TerrainGenerator.octaves, TerrainGenerator.persistance, TerrainGenerator.lacunarity, chunkOffset);
+        float[,] noiseMap1 = Noise.GenerateNoiseMap(gen.chunkLength, gen.chunkLength,
+            gen.seed1, gen.noiseScale,
+            gen.octaves, gen.persistance, gen.lacunarity, chunkOffset);
+        float[,] noiseMap2 = Noise.GenerateNoiseMap(gen.chunkLength, gen.chunkLength,
+            gen.seed2, gen.noiseScale,
+            gen.octaves, gen.persistance, gen.lacunarity, chunkOffset);
 
-        for (int y = 0; y < TerrainGenerator.chunkLength; y++)
+        for (int y = 0; y < gen.chunkLength; y++)
         {
-            for (int x = 0; x < TerrainGenerator.chunkLength; x++)
+            for (int x = 0; x < gen.chunkLength; x++)
             {
-                if ((noiseMap1[x, y] > TerrainGenerator.cut && noiseMap1[x, y] < TerrainGenerator.cut + TerrainGenerator.range * multiplier)
-                    || (noiseMap2[x, y] > TerrainGenerator.cut && noiseMap2[x, y] < TerrainGenerator.cut + TerrainGenerator.range * multiplier))
+                if ((noiseMap1[x, y] > gen.cut && noiseMap1[x, y] < gen.cut + gen.range * multiplier)
+                    || (noiseMap2[x, y] > gen.cut && noiseMap2[x, y] < gen.cut + gen.range * multiplier))
                 {
                     values[x, y] = -10f;
                 }
                 else
                 {
-                    float dist = Mathf.Min(Mathf.Abs(noiseMap1[x, y] - TerrainGenerator.cut - TerrainGenerator.range / 2f),
-                        Mathf.Abs(noiseMap2[x, y] - TerrainGenerator.cut - TerrainGenerator.range / 2f));
+                    float dist = Mathf.Min(Mathf.Abs(noiseMap1[x, y] - gen.cut - gen.range / 2f),
+                        Mathf.Abs(noiseMap2[x, y] - gen.cut - gen.range / 2f));
                     values[x, y] = dist * 3f + 0.2f * (1f-multiplier);
                 }
             }
@@ -152,9 +156,9 @@ public class TerrainChunk : MonoBehaviour
 
     public void GenerateChunkObjects()
     {
-        for (int y = 0; y < TerrainGenerator.chunkLength; y+=5)
+        for (int y = 0; y < gen.chunkLength; y+=5)
         {
-            for (int x = 0; x < TerrainGenerator.chunkLength; x+=5)
+            for (int x = 0; x < gen.chunkLength; x+=5)
             {
                 if (values[x + 2, y + 2] < 0f) continue; //el centro tiene camino, no aparece nada
 
@@ -225,22 +229,22 @@ public class TerrainChunk : MonoBehaviour
 
     void DrawPixels()
     {
-        Texture2D texture = new Texture2D(TerrainGenerator.chunkLength, TerrainGenerator.chunkLength);
+        Texture2D texture = new Texture2D(gen.chunkLength, gen.chunkLength);
 
-        Color[] colourMap = new Color[TerrainGenerator.chunkLength * TerrainGenerator.chunkLength];
+        Color[] colourMap = new Color[gen.chunkLength * gen.chunkLength];
 
-        for (int y = 0; y < TerrainGenerator.chunkLength; y++)
+        for (int y = 0; y < gen.chunkLength; y++)
         {
-            for (int x = 0; x < TerrainGenerator.chunkLength; x++)
+            for (int x = 0; x < gen.chunkLength; x++)
             {
                 
                 if (values[x, y] < 0f)
                 {
-                    colourMap[y * TerrainGenerator.chunkLength + x] = pathColor;
+                    colourMap[y * gen.chunkLength + x] = pathColor;
                 }
                 else
                 {
-                    colourMap[y * TerrainGenerator.chunkLength + x] = Color.Lerp(grassColorInit, grassColorEnd, Mathf.Min((values[x, y] - TerrainGenerator.cut)*5f, 1.0f)); // Color.red * values[x, y];
+                    colourMap[y * gen.chunkLength + x] = Color.Lerp(grassColorInit, grassColorEnd, Mathf.Min((values[x, y] - gen.cut)*5f, 1.0f)); // Color.red * values[x, y];
                 }
             }
         }
