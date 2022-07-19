@@ -26,8 +26,8 @@ public class TerrainChunk : MonoBehaviour
     float[,] values;
     Vector2 chunkOffset;
 
-    float grassLimit = 0.05f;
-    float treeLimit = 0.15f;
+    public float grassLimit = 0.05f;
+    public float treeLimit = 0.15f;
 
     Color pathColor = new Color(100f / 255f, 147f / 255f, 60f / 255f);
     Color grassColorInit = new Color(60f / 255f, 147f / 255f, 20f / 255f);
@@ -117,8 +117,6 @@ public class TerrainChunk : MonoBehaviour
 
     private IEnumerator ValuesParallel()
     {
-        float multiplier = 1f;// - Mathf.Clamp((Vector3.Distance(transform.position, Vector3.zero) - 0.9f * 500f) * 10f / 500f, 0f, 1f);
-
         //seeds, scale, octaves, persistance, lacunarity
         float[,] noiseMap1 = Noise.GenerateNoiseMap(gen.chunkLength * gen.chunkSpacing, gen.chunkLength * gen.chunkSpacing,
             gen.seed1, gen.noiseScale,
@@ -131,8 +129,8 @@ public class TerrainChunk : MonoBehaviour
         {
             for (int x = 0; x < gen.chunkLength * gen.chunkSpacing; x++)
             {
-                if ((noiseMap1[x, y] > gen.cut && noiseMap1[x, y] < gen.cut + gen.range * multiplier)
-                    || (noiseMap2[x, y] > gen.cut && noiseMap2[x, y] < gen.cut + gen.range * multiplier))
+                if ((noiseMap1[x, y] > gen.cut && noiseMap1[x, y] < gen.cut + gen.range)
+                    || (noiseMap2[x, y] > gen.cut && noiseMap2[x, y] < gen.cut + gen.range))
                 {
                     values[x, y] = -10f;
                 }
@@ -140,7 +138,7 @@ public class TerrainChunk : MonoBehaviour
                 {
                     float dist = Mathf.Min(Mathf.Abs(noiseMap1[x, y] - gen.cut - gen.range / 2f),
                         Mathf.Abs(noiseMap2[x, y] - gen.cut - gen.range / 2f));
-                    values[x, y] = dist * 3f + 0.2f * (1f-multiplier);
+                    values[x, y] = dist * 3f;
                 }
             }
         }
