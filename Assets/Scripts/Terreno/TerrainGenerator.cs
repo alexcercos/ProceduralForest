@@ -35,6 +35,8 @@ public class TerrainGenerator : MonoBehaviour
 
     GameObject chunk_parent;
 
+    int tile_separation;
+
     private void Start()
     {
         chunksArr = new Dictionary<Vector2, GameObject>();
@@ -46,8 +48,9 @@ public class TerrainGenerator : MonoBehaviour
         for (int i=0; i<noise_map_amount; i++)
             seeds[i] = Random.Range(1, 100000);
 
+        tile_separation = chunkLength * chunkSpacing;
 
-        lastChunkPosition = new Vector2(Mathf.FloorToInt((playerTransform.position.x + 25) / 50), Mathf.FloorToInt((playerTransform.position.z + 25) / 50));
+        lastChunkPosition = new Vector2(Mathf.FloorToInt((playerTransform.position.x + tile_separation/2) / tile_separation), Mathf.FloorToInt((playerTransform.position.z + tile_separation/2) / tile_separation));
         GenerateChunksAround((int)lastChunkPosition.x, (int)lastChunkPosition.y);
     }
 
@@ -56,7 +59,7 @@ public class TerrainGenerator : MonoBehaviour
         if (!chunksArr.ContainsKey(new Vector2(x, z)))
         {
             GameObject newChunk = Instantiate(chunk, transform.position + new Vector3(x, 0f, z), transform.rotation, chunk_parent.transform);
-            newChunk.GetComponent<TerrainChunk>().SetChunkValues(this, new Vector2(-newChunk.transform.position.x / 45f, -newChunk.transform.position.z / 45f));
+            newChunk.GetComponent<TerrainChunk>().SetChunkValues(this, new Vector2(-newChunk.transform.position.x / noiseScale, -newChunk.transform.position.z / noiseScale));
 
             chunksArr.Add(new Vector2(x, z), newChunk);
         }
@@ -80,7 +83,7 @@ public class TerrainGenerator : MonoBehaviour
         {
             for (int j = -createRange; j <= createRange; j++)
             {
-                CreateChunk((x + i) * 50f, (z + j) * 50f);
+                CreateChunk((x + i) * tile_separation, (z + j) * tile_separation);
             }
         }
     }
@@ -89,19 +92,19 @@ public class TerrainGenerator : MonoBehaviour
     {
         for (int j = -destroyRange; j <= destroyRange; j++)
         {
-            DestroyChunk((x + destroyRange) * 50f, (z + j) * 50f);
-            DestroyChunk((x - destroyRange) * 50f, (z + j) * 50f);
+            DestroyChunk((x + destroyRange) * tile_separation, (z + j) * tile_separation);
+            DestroyChunk((x - destroyRange) * tile_separation, (z + j) * tile_separation);
         }
         for (int i = -destroyRange+1; i < destroyRange; i++)
         {
-            DestroyChunk((x + i) * 50f, (z + destroyRange) * 50f);
-            DestroyChunk((x + i) * 50f, (z - destroyRange) * 50f);
+            DestroyChunk((x + i) * tile_separation, (z + destroyRange) * tile_separation);
+            DestroyChunk((x + i) * tile_separation, (z - destroyRange) * tile_separation);
         }
     }
 
     private void Update()
     {
-        Vector2 newChunkPosition = new Vector2(Mathf.FloorToInt((playerTransform.position.x + 25) / 50), Mathf.FloorToInt((playerTransform.position.z + 25) / 50));
+        Vector2 newChunkPosition = new Vector2(Mathf.FloorToInt((playerTransform.position.x + tile_separation/2) / tile_separation), Mathf.FloorToInt((playerTransform.position.z + tile_separation/2) / tile_separation));
 
         if (newChunkPosition != lastChunkPosition)
         {

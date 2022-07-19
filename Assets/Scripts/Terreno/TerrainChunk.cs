@@ -48,6 +48,8 @@ public class TerrainChunk : MonoBehaviour
 
         values = new float[gen.chunkLength*gen.chunkSpacing, gen.chunkLength * gen.chunkSpacing];
 
+        transform.localScale = new Vector3(gen.chunkSpacing, gen.chunkSpacing, gen.chunkSpacing);
+
         StartCoroutine(ValuesParallel());
     }
     
@@ -158,7 +160,7 @@ public class TerrainChunk : MonoBehaviour
         {
             for (int x = 0; x < gen.chunkLength * gen.chunkSpacing; x+= gen.chunkSpacing)
             {
-                if (values[x + 2, y + 2] < 0f) continue; //el centro tiene camino, no aparece nada
+                //if (values[x + 2, y + 2] < 0f) continue; //el centro tiene camino, no aparece nada
 
 
                 //comprobar 5x5
@@ -178,12 +180,12 @@ public class TerrainChunk : MonoBehaviour
                 }
                 float pseudoRand = totalValue * 100f;
                 relSpawn = relSpawn / totalValue;
-                totalValue /= 25f;
+                totalValue /= (float)(gen.chunkSpacing * gen.chunkSpacing);
 
                 //el SPAWN RELATIVO podria ser diferente para arbol o hierba
 
                 //poner mas tipos de cosas seria mejor (NO ALEATORIAS, DEBEN SALIR SIEMPRE IGUAL)
-                Vector3 spPosition = transform.position + new Vector3(25f - relSpawn.x, 0f, 25f - relSpawn.y);
+                Vector3 spPosition = transform.position + new Vector3((gen.chunkLength * gen.chunkSpacing)/2f - relSpawn.x, 0f, (gen.chunkLength * gen.chunkSpacing)/2f - relSpawn.y);
 
                 if (totalValue > treeLimit)
                 {
