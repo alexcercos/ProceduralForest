@@ -28,17 +28,9 @@ public class TerrainGenerator : MonoBehaviour
     public int destroyRange = 6; //lo que hay que alejarse para eliminar un chunk
 
     public Transform playerTransform;
-    [HideInInspector] public Vector2 lastChunkPosition;
-    
-    
 
-    static List<Vector3> list;
-
+    Vector2 lastChunkPosition;
     Dictionary<Vector2, GameObject> chunksArr;
-
-    static Color particle1 = new Color(1f, 1f, 1f, 0.0f);
-    static Color particle2 = new Color(1f, 1f, 0f, 0.8f);
-    static Color particle3 = new Color(0.5f, 0f, 0f, 1f);
 
     //FALTA tener en cuenta el escenario central
 
@@ -116,10 +108,5 @@ public class TerrainGenerator : MonoBehaviour
             GenerateChunksAround((int)newChunkPosition.x, (int)newChunkPosition.y);
             DestroyLimitChunks((int)newChunkPosition.x, (int)newChunkPosition.y);
         }
-    }
-
-    public void AddFinalLocation()
-    {
-        list.Add(Vector3.zero); //localizacion del monte
     }
 }
