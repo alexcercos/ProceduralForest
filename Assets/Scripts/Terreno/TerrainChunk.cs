@@ -26,6 +26,14 @@ public class TerrainChunk : MonoBehaviour
     float[,] values;
     Vector2 chunkOffset;
 
+    public float globalScale = 0.2f;
+
+    public float minTreeScale = 1f;
+    public float maxTreeScale = 1.5f;
+
+    public float minGrassScale = 0.6f;
+    public float maxGrassScale = 1.1f;
+
     public float grassLimit = 0.05f;
     public float treeLimit = 0.15f;
 
@@ -57,6 +65,9 @@ public class TerrainChunk : MonoBehaviour
     {
         NormalizeArray(ref grassObjects);
         NormalizeArray(ref treeObjects);
+
+        NormalizeScales(ref minGrassScale, ref maxGrassScale);
+        NormalizeScales(ref minTreeScale, ref maxTreeScale);
     }
     
     void NormalizeArray(ref TerrainObject[] array)
@@ -115,6 +126,12 @@ public class TerrainChunk : MonoBehaviour
 
         for (int j = 0; j < array.Length; j++) //First call
             array[j].updateWeight();
+    }
+
+    void NormalizeScales(ref float min, ref float max)
+    {
+        if (min < 0f) min = 0f;
+        if (max < min) max = min;
     }
 
     private IEnumerator ValuesParallel()
@@ -188,30 +205,25 @@ public class TerrainChunk : MonoBehaviour
                 Vector3 spPosition = transform.position + new Vector3((gen.chunkLength * gen.chunkSpacing)/2f - relSpawn.x, 0f, (gen.chunkLength * gen.chunkSpacing)/2f - relSpawn.y);
 
                 if (totalValue > treeLimit)
-                {
-                    float s = (1f + totalValue + pseudoRand % 0.5f)*0.2f;
-
-                    GameObject instance = GetInstanceFromList(pseudoRand % 1f, ref treeObjects);
-                    if (instance != null)
-                    {
-                        GameObject newTree = Instantiate(instance, spPosition, Quaternion.Euler(0f, pseudoRand % 360f, 0f), transform);
-                        newTree.transform.localScale = new Vector3(s, s, s);
-                    }
-                }
+                    CreateNewObject(minTreeScale, maxTreeScale, totalValue, pseudoRand, spPosition, ref treeObjects);
+                
                 else if (totalValue > grassLimit)
-                {
-                    float s = (0.6f + totalValue + pseudoRand % 0.5f)*0.2f;
-
-                    GameObject instance = GetInstanceFromList(pseudoRand % 1f, ref grassObjects);
-                    if (instance!=null)
-                    {
-                        GameObject newGrass = Instantiate(instance, spPosition, Quaternion.Euler(0f, pseudoRand % 360f, 0f), transform);
-                        newGrass.transform.localScale = new Vector3(s, s, s);
-                    }
-                }
+                    CreateNewObject(minGrassScale, maxGrassScale, totalValue, pseudoRand, spPosition, ref grassObjects);
+                
                 
             }
         }
+    }
+
+    void CreateNewObject(float minScale, float maxScale, float totalValue, float pseudoRand, Vector3 spPosition, ref TerrainObject[] list)
+    {
+        float s = (minScale + totalValue + pseudoRand % (maxScale - minScale)) * globalScale;
+
+        GameObject instance = GetInstanceFromList(pseudoRand % 1f, ref list);
+        if (instance == null) return;
+        
+        GameObject newObj = Instantiate(instance, spPosition, Quaternion.Euler(0f, pseudoRand % 360f, 0f), transform);
+        newObj.transform.localScale = new Vector3(s, s, s);
     }
 
     GameObject GetInstanceFromList(float random, ref TerrainObject[] list)
