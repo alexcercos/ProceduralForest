@@ -135,11 +135,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: TerrainGenerator
       objectReference: {fileID: 0}
-    - target: {fileID: 4971085682241888706, guid: 0c99b641efcc354429ac5f307a375ccb,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 4971085682241888732, guid: 0c99b641efcc354429ac5f307a375ccb,
         type: 3}
       propertyPath: playerTransform

@@ -45,9 +45,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chunk: {fileID: 1201986934894482646, guid: 554b4bf0f87411a4bbc85bb25f07bc65, type: 3}
-  fountain: {fileID: 2032813411635008384, guid: 7dbaf96a804e89041836aaf263147db3,
-    type: 3}
+  chunkLength: 10
+  chunkSpacing: 5
+  noiseScale: 45
+  octaves: 3
+  persistance: 0.4
+  lacunarity: 1.3
+  seed1: 0
+  seed2: 0
+  cut: 0.4
+  range: 0.05
   createRange: 2
   destroyRange: 4
   playerTransform: {fileID: 0}
-  lastChunkPosition: {x: 0, y: 0}
