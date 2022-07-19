@@ -37,9 +37,15 @@ public class TerrainChunk : MonoBehaviour
     public float grassLimit = 0.05f;
     public float treeLimit = 0.15f;
 
-    Color pathColor = new Color(100f / 255f, 147f / 255f, 60f / 255f);
-    Color grassColorInit = new Color(60f / 255f, 147f / 255f, 20f / 255f);
-    Color grassColorEnd = new Color(15f / 255f, 120f / 255f, 60f / 255f);
+    Color pathColor = new Color(100f / 255f, 
+                                147f / 255f, 
+                                60f / 255f);
+    Color grassColorInit = new Color(60f / 255f, 
+                                     147f / 255f, 
+                                     20f / 255f);
+    Color grassColorEnd = new Color(15f / 255f, 
+                                    120f / 255f, 
+                                    60f / 255f);
 
     TerrainGenerator gen;
 
@@ -202,7 +208,10 @@ public class TerrainChunk : MonoBehaviour
                 //el SPAWN RELATIVO podria ser diferente para arbol o hierba
 
                 //poner mas tipos de cosas seria mejor (NO ALEATORIAS, DEBEN SALIR SIEMPRE IGUAL)
-                Vector3 spPosition = transform.position + new Vector3((gen.chunkLength * gen.chunkSpacing)/2f - relSpawn.x, 0f, (gen.chunkLength * gen.chunkSpacing)/2f - relSpawn.y);
+                Vector3 spPosition = transform.position + 
+                                        new Vector3((gen.chunkLength * gen.chunkSpacing)/2f - relSpawn.x, 
+                                                    0f, 
+                                                    (gen.chunkLength * gen.chunkSpacing)/2f - relSpawn.y);
 
                 if (totalValue > treeLimit)
                     CreateNewObject(minTreeScale, maxTreeScale, totalValue, pseudoRand, spPosition, ref treeObjects);
@@ -256,7 +265,10 @@ public class TerrainChunk : MonoBehaviour
                 }
                 else
                 {
-                    colourMap[y * gen.chunkLength * gen.chunkSpacing + x] = Color.Lerp(grassColorInit, grassColorEnd, Mathf.Min((values[x, y] - gen.cut)*5f, 1.0f)); // Color.red * values[x, y];
+                    colourMap[y * gen.chunkLength * gen.chunkSpacing + x] = Color.Lerp(grassColorInit, 
+                                                                                       grassColorEnd, 
+                                                                                       Mathf.Min((values[x, y] - gen.cut)*5f, 
+                                                                                       1.0f));
                 }
             }
         }

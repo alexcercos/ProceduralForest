@@ -50,7 +50,8 @@ public class TerrainGenerator : MonoBehaviour
 
         tile_separation = chunkLength * chunkSpacing;
 
-        lastChunkPosition = new Vector2(Mathf.FloorToInt((playerTransform.position.x + tile_separation/2) / tile_separation), Mathf.FloorToInt((playerTransform.position.z + tile_separation/2) / tile_separation));
+        lastChunkPosition = new Vector2(Mathf.FloorToInt((playerTransform.position.x + tile_separation/2) / tile_separation), 
+                                        Mathf.FloorToInt((playerTransform.position.z + tile_separation/2) / tile_separation));
         GenerateChunksAround((int)lastChunkPosition.x, (int)lastChunkPosition.y);
     }
 
@@ -58,8 +59,11 @@ public class TerrainGenerator : MonoBehaviour
     {
         if (!chunksArr.ContainsKey(new Vector2(x, z)))
         {
-            GameObject newChunk = Instantiate(chunk, transform.position + new Vector3(x, 0f, z), transform.rotation, chunk_parent.transform);
-            newChunk.GetComponent<TerrainChunk>().SetChunkValues(this, new Vector2(-newChunk.transform.position.x / noiseScale, -newChunk.transform.position.z / noiseScale));
+            GameObject newChunk = Instantiate(chunk, transform.position + new Vector3(x, 0f, z), 
+                                              transform.rotation, chunk_parent.transform);
+            newChunk.GetComponent<TerrainChunk>().SetChunkValues(this, 
+                                                                new Vector2(-newChunk.transform.position.x / noiseScale, 
+                                                                            -newChunk.transform.position.z / noiseScale));
 
             chunksArr.Add(new Vector2(x, z), newChunk);
         }
@@ -104,7 +108,8 @@ public class TerrainGenerator : MonoBehaviour
 
     private void Update()
     {
-        Vector2 newChunkPosition = new Vector2(Mathf.FloorToInt((playerTransform.position.x + tile_separation/2) / tile_separation), Mathf.FloorToInt((playerTransform.position.z + tile_separation/2) / tile_separation));
+        Vector2 newChunkPosition = new Vector2(Mathf.FloorToInt((playerTransform.position.x + tile_separation/2) / tile_separation), 
+                                               Mathf.FloorToInt((playerTransform.position.z + tile_separation/2) / tile_separation));
 
         if (newChunkPosition != lastChunkPosition)
         {
