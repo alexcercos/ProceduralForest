@@ -33,11 +33,12 @@ public class TerrainGenerator : MonoBehaviour
     Vector2 lastChunkPosition;
     Dictionary<Vector2, GameObject> chunksArr;
 
-    //FALTA tener en cuenta el escenario central
+    GameObject chunk_parent;
 
     private void Start()
     {
         chunksArr = new Dictionary<Vector2, GameObject>();
+        chunk_parent = new GameObject("Chunks Container");
         
         seed1 = Random.Range(1, 100000);
         seed2 = Random.Range(1, 100000);
@@ -54,7 +55,7 @@ public class TerrainGenerator : MonoBehaviour
     {
         if (!chunksArr.ContainsKey(new Vector2(x, z)))
         {
-            GameObject newChunk = Instantiate(chunk, transform.position + new Vector3(x, 0f, z), transform.rotation);
+            GameObject newChunk = Instantiate(chunk, transform.position + new Vector3(x, 0f, z), transform.rotation, chunk_parent.transform);
             newChunk.GetComponent<TerrainChunk>().SetChunkValues(this, new Vector2(-newChunk.transform.position.x / 45f, -newChunk.transform.position.z / 45f));
 
             chunksArr.Add(new Vector2(x, z), newChunk);
