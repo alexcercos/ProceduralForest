@@ -46,7 +46,7 @@ public class TerrainChunk : MonoBehaviour
 
         gen = generator;
 
-        values = new float[gen.chunkLength, gen.chunkLength];
+        values = new float[gen.chunkLength*gen.chunkSpacing, gen.chunkLength * gen.chunkSpacing];
 
         StartCoroutine(ValuesParallel());
     }
@@ -120,16 +120,16 @@ public class TerrainChunk : MonoBehaviour
         float multiplier = 1f;// - Mathf.Clamp((Vector3.Distance(transform.position, Vector3.zero) - 0.9f * 500f) * 10f / 500f, 0f, 1f);
 
         //seeds, scale, octaves, persistance, lacunarity
-        float[,] noiseMap1 = Noise.GenerateNoiseMap(gen.chunkLength, gen.chunkLength,
+        float[,] noiseMap1 = Noise.GenerateNoiseMap(gen.chunkLength * gen.chunkSpacing, gen.chunkLength * gen.chunkSpacing,
             gen.seed1, gen.noiseScale,
             gen.octaves, gen.persistance, gen.lacunarity, chunkOffset);
-        float[,] noiseMap2 = Noise.GenerateNoiseMap(gen.chunkLength, gen.chunkLength,
+        float[,] noiseMap2 = Noise.GenerateNoiseMap(gen.chunkLength * gen.chunkSpacing, gen.chunkLength * gen.chunkSpacing,
             gen.seed2, gen.noiseScale,
             gen.octaves, gen.persistance, gen.lacunarity, chunkOffset);
 
-        for (int y = 0; y < gen.chunkLength; y++)
+        for (int y = 0; y < gen.chunkLength * gen.chunkSpacing; y++)
         {
-            for (int x = 0; x < gen.chunkLength; x++)
+            for (int x = 0; x < gen.chunkLength * gen.chunkSpacing; x++)
             {
                 if ((noiseMap1[x, y] > gen.cut && noiseMap1[x, y] < gen.cut + gen.range * multiplier)
                     || (noiseMap2[x, y] > gen.cut && noiseMap2[x, y] < gen.cut + gen.range * multiplier))
@@ -156,9 +156,9 @@ public class TerrainChunk : MonoBehaviour
 
     public void GenerateChunkObjects()
     {
-        for (int y = 0; y < gen.chunkLength; y+=5)
+        for (int y = 0; y < gen.chunkLength * gen.chunkSpacing; y+=gen.chunkSpacing)
         {
-            for (int x = 0; x < gen.chunkLength; x+=5)
+            for (int x = 0; x < gen.chunkLength * gen.chunkSpacing; x+= gen.chunkSpacing)
             {
                 if (values[x + 2, y + 2] < 0f) continue; //el centro tiene camino, no aparece nada
 
@@ -167,9 +167,9 @@ public class TerrainChunk : MonoBehaviour
                 Vector2 relSpawn = Vector2.zero;
                 float totalValue = 0f;
 
-                for (int subY = y; subY < y + 5; subY++)
+                for (int subY = y; subY < y + gen.chunkSpacing; subY++)
                 {
-                    for (int subX = x; subX < x + 5; subX++)
+                    for (int subX = x; subX < x + gen.chunkSpacing; subX++)
                     {
                         if (values[subX, subY] > 0f)
                         {
@@ -229,22 +229,22 @@ public class TerrainChunk : MonoBehaviour
 
     void DrawPixels()
     {
-        Texture2D texture = new Texture2D(gen.chunkLength, gen.chunkLength);
+        Texture2D texture = new Texture2D(gen.chunkLength * gen.chunkSpacing, gen.chunkLength * gen.chunkSpacing);
 
-        Color[] colourMap = new Color[gen.chunkLength * gen.chunkLength];
+        Color[] colourMap = new Color[gen.chunkLength * gen.chunkSpacing * gen.chunkLength * gen.chunkSpacing];
 
-        for (int y = 0; y < gen.chunkLength; y++)
+        for (int y = 0; y < gen.chunkLength * gen.chunkSpacing; y++)
         {
-            for (int x = 0; x < gen.chunkLength; x++)
+            for (int x = 0; x < gen.chunkLength * gen.chunkSpacing; x++)
             {
                 
                 if (values[x, y] < 0f)
                 {
-                    colourMap[y * gen.chunkLength + x] = pathColor;
+                    colourMap[y * gen.chunkLength * gen.chunkSpacing + x] = pathColor;
                 }
                 else
                 {
-                    colourMap[y * gen.chunkLength + x] = Color.Lerp(grassColorInit, grassColorEnd, Mathf.Min((values[x, y] - gen.cut)*5f, 1.0f)); // Color.red * values[x, y];
+                    colourMap[y * gen.chunkLength * gen.chunkSpacing + x] = Color.Lerp(grassColorInit, grassColorEnd, Mathf.Min((values[x, y] - gen.cut)*5f, 1.0f)); // Color.red * values[x, y];
                 }
             }
         }

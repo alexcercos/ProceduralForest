@@ -6,7 +6,8 @@ public class TerrainGenerator : MonoBehaviour
 {
     public GameObject chunk;
 
-    public int chunkLength = 50;
+    public int chunkLength = 10;
+    public int chunkSpacing = 5;
     public float noiseScale = 45;
 
     //PLANOS en escala 5*****
