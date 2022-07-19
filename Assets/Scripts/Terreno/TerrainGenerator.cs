@@ -18,8 +18,8 @@ public class TerrainGenerator : MonoBehaviour
     public float persistance = 0.4f;
     public float lacunarity = 1.3f;
 
-    public int seed1; //hacer aleatorias
-    public int seed2;
+    public int noise_map_amount = 2;
+    [HideInInspector] public int[] seeds; //hacer aleatorias
     //no tiene offset
 
     public float cut = 0.4f;
@@ -39,12 +39,12 @@ public class TerrainGenerator : MonoBehaviour
     {
         chunksArr = new Dictionary<Vector2, GameObject>();
         chunk_parent = new GameObject("Chunks Container");
-        
-        seed1 = Random.Range(1, 100000);
-        seed2 = Random.Range(1, 100000);
 
-        if (seed1 == seed2) seed2++;
+        noise_map_amount = noise_map_amount < 1 ? 1 : noise_map_amount; //Cap amount
 
+        seeds = new int[noise_map_amount];
+        for (int i=0; i<noise_map_amount; i++)
+            seeds[i] = Random.Range(1, 100000);
 
 
         lastChunkPosition = new Vector2(Mathf.FloorToInt((playerTransform.position.x + 25) / 50), Mathf.FloorToInt((playerTransform.position.z + 25) / 50));

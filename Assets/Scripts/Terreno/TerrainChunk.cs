@@ -118,27 +118,27 @@ public class TerrainChunk : MonoBehaviour
     private IEnumerator ValuesParallel()
     {
         //seeds, scale, octaves, persistance, lacunarity
-        float[,] noiseMap1 = Noise.GenerateNoiseMap(gen.chunkLength * gen.chunkSpacing, gen.chunkLength * gen.chunkSpacing,
-            gen.seed1, gen.noiseScale,
-            gen.octaves, gen.persistance, gen.lacunarity, chunkOffset);
-        float[,] noiseMap2 = Noise.GenerateNoiseMap(gen.chunkLength * gen.chunkSpacing, gen.chunkLength * gen.chunkSpacing,
-            gen.seed2, gen.noiseScale,
-            gen.octaves, gen.persistance, gen.lacunarity, chunkOffset);
-
-        for (int y = 0; y < gen.chunkLength * gen.chunkSpacing; y++)
+        for (int i=0; i<gen.noise_map_amount; i++)
         {
-            for (int x = 0; x < gen.chunkLength * gen.chunkSpacing; x++)
+            float[,] noiseMap = Noise.GenerateNoiseMap(gen.chunkLength * gen.chunkSpacing, gen.chunkLength * gen.chunkSpacing,
+                gen.seeds[i], gen.noiseScale, gen.octaves, gen.persistance, gen.lacunarity, chunkOffset);
+
+            for (int y = 0; y < gen.chunkLength * gen.chunkSpacing; y++)
             {
-                if ((noiseMap1[x, y] > gen.cut && noiseMap1[x, y] < gen.cut + gen.range)
-                    || (noiseMap2[x, y] > gen.cut && noiseMap2[x, y] < gen.cut + gen.range))
+                for (int x = 0; x < gen.chunkLength * gen.chunkSpacing; x++)
                 {
-                    values[x, y] = -10f;
-                }
-                else
-                {
-                    float dist = Mathf.Min(Mathf.Abs(noiseMap1[x, y] - gen.cut - gen.range / 2f),
-                        Mathf.Abs(noiseMap2[x, y] - gen.cut - gen.range / 2f));
-                    values[x, y] = dist * 3f;
+                    if (noiseMap[x, y] > gen.cut && noiseMap[x, y] < gen.cut + gen.range)
+                    {
+                        values[x, y] = -10f;
+                    }
+                    else if (values[x, y] < 0f) continue;
+                    else
+                    {
+                        float dist = 3f * Mathf.Abs(noiseMap[x, y] - gen.cut - gen.range / 2f);
+
+                        if (values[x, y] > 0f) values[x, y] = Mathf.Min(dist, values[x, y]);
+                        else values[x, y] = dist;
+                    }
                 }
             }
         }
