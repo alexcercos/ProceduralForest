@@ -137,7 +137,7 @@ public class TerrainChunk : MonoBehaviour
     private IEnumerator ValuesParallel()
     {
         //seeds, scale, octaves, persistance, lacunarity
-        for (int i=0; i<gen.noise_map_amount; i++)
+        for (int i=0; i<gen.noiseMapAmount; i++)
         {
             float[,] noiseMap = Noise.GenerateNoiseMap(gen.chunkLength * gen.chunkSpacing, gen.chunkLength * gen.chunkSpacing,
                 gen.seeds[i], gen.noiseScale, gen.octaves, gen.persistance, gen.lacunarity, chunkOffset);

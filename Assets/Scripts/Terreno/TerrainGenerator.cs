@@ -18,7 +18,7 @@ public class TerrainGenerator : MonoBehaviour
     public float persistance = 0.4f;
     public float lacunarity = 1.3f;
 
-    public int noise_map_amount = 2;
+    public int noiseMapAmount = 2;
     [HideInInspector] public int[] seeds; //hacer aleatorias
     //no tiene offset
 
@@ -42,10 +42,10 @@ public class TerrainGenerator : MonoBehaviour
         chunksArr = new Dictionary<Vector2, GameObject>();
         chunk_parent = new GameObject("Chunks Container");
 
-        noise_map_amount = noise_map_amount < 1 ? 1 : noise_map_amount; //Cap amount
+        noiseMapAmount = noiseMapAmount < 1 ? 1 : noiseMapAmount; //Cap amount
 
-        seeds = new int[noise_map_amount];
-        for (int i=0; i<noise_map_amount; i++)
+        seeds = new int[noiseMapAmount];
+        for (int i=0; i< noiseMapAmount; i++)
             seeds[i] = Random.Range(1, 100000);
 
         tile_separation = chunkLength * chunkSpacing;
