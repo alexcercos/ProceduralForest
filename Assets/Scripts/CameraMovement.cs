@@ -59,10 +59,7 @@ public class CameraMovement : MonoBehaviour
             UpdateZoom(Input.mouseScrollDelta.y > 0);
 
         if (zoomLevel!=interpolateZoomLevel)
-        {
-            Debug.Log("Update zoom");
             UpdateZoomPosition();
-        }
     }
 
     void UpdatePosition()
