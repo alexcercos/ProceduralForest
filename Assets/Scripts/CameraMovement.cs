@@ -15,13 +15,21 @@ public class CameraMovement : MonoBehaviour
 
     Vector2 lastMousePos;
 
-    public int zoomLevel = 2;
+    public float zoomLevel = 2;
     public int totalZoomLevels = 5;
+
+    public float zoomSpeed = 0.1f;
+
+    float interpolateZoomLevel;
 
     public float angularSpeed = 10f;
 
     void Start()
     {
+        zoomLevel = Mathf.Min(totalZoomLevels,
+                        Mathf.Max(0f,
+                            Mathf.Floor(zoomLevel)));
+        interpolateZoomLevel = zoomLevel;
         lastMousePos = Vector2.zero;
 
         isMoving = false;
@@ -49,6 +57,12 @@ public class CameraMovement : MonoBehaviour
 
         if (Input.mouseScrollDelta.y != 0)
             UpdateZoom(Input.mouseScrollDelta.y > 0);
+
+        if (zoomLevel!=interpolateZoomLevel)
+        {
+            Debug.Log("Update zoom");
+            UpdateZoomPosition();
+        }
     }
 
     void UpdatePosition()
@@ -74,13 +88,14 @@ public class CameraMovement : MonoBehaviour
     {
         if (up) zoomLevel = zoomLevel < totalZoomLevels ? zoomLevel + 1 : totalZoomLevels;
         else    zoomLevel = zoomLevel > 0               ? zoomLevel - 1 : 0;
-
-        UpdateZoomPosition();
     }
 
     void UpdateZoomPosition()
     {
-        float lerp = zoomLevel / ((float)totalZoomLevels);
+        if (Mathf.Abs(zoomLevel - interpolateZoomLevel) < 0.001f) interpolateZoomLevel = zoomLevel;
+        else interpolateZoomLevel += (zoomLevel - interpolateZoomLevel) * zoomSpeed;
+
+        float lerp = interpolateZoomLevel / totalZoomLevels;
         cameraTransform.position = Vector3.Lerp(minZoomTransform.position, maxZoomTransform.position, lerp);
         cameraTransform.rotation = Quaternion.Slerp(minZoomTransform.rotation, maxZoomTransform.rotation, lerp);
     }
