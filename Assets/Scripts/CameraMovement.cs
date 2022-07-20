@@ -6,40 +6,66 @@ public class CameraMovement : MonoBehaviour
 {
     // Start is called before the first frame update
 
-    Vector3 last_hit;
-    bool is_moving;
+    public Transform cameraTransform;
+    public Transform minZoomTransform;
+    public Transform maxZoomTransform;
+
+    Vector3 lastHit;
+    bool isMoving;
+
+    int zoomLevel = 5;
+
+    int totalZoomLevels = 15;
 
     void Start()
     {
-        is_moving = false;
+        isMoving = false;
+        UpdateZoomPosition();
     }
 
     // Update is called once per frame
     void Update()
     {
         if (Input.GetMouseButton(0))
-        {
-
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit, 1000f))
-            {
-                Vector3 rel_hit = hit.point - transform.position;
-                rel_hit.y = 0;
-                if (is_moving)
-                {
-                    transform.position += (last_hit - rel_hit);
-                }
-
-                last_hit = rel_hit;
-                is_moving = true;
-            }
-                
-        }
+            UpdatePosition();
         else
+            isMoving = false;
+
+        if (Input.mouseScrollDelta.y != 0)
+            UpdateZoom(Input.mouseScrollDelta.y > 0);
+    }
+
+    void UpdatePosition()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 1000f))
         {
-            is_moving = false;
+            Vector3 rel_hit = hit.point - transform.position;
+            rel_hit.y = 0;
+            if (isMoving)
+            {
+                transform.position += (lastHit - rel_hit);
+            }
+
+            lastHit = rel_hit;
+            isMoving = true;
         }
+    }
+
+    void UpdateZoom(bool up)
+    {
+        if (up) zoomLevel = zoomLevel < totalZoomLevels ? zoomLevel + 1 : totalZoomLevels;
+        else    zoomLevel = zoomLevel > 0               ? zoomLevel - 1 : 0;
+
+        UpdateZoomPosition();
+    }
+
+    void UpdateZoomPosition()
+    {
+        float lerp = zoomLevel / ((float)totalZoomLevels);
+        cameraTransform.position = Vector3.Lerp(minZoomTransform.position, maxZoomTransform.position, lerp);
+        cameraTransform.rotation = Quaternion.Slerp(minZoomTransform.rotation, maxZoomTransform.rotation, lerp);
     }
 }
