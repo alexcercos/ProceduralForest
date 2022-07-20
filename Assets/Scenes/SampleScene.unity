@@ -137,6 +137,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4971085682241888732, guid: 0c99b641efcc354429ac5f307a375ccb,
         type: 3}
+      propertyPath: createRange
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4971085682241888732, guid: 0c99b641efcc354429ac5f307a375ccb,
+        type: 3}
+      propertyPath: destroyRange
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 4971085682241888732, guid: 0c99b641efcc354429ac5f307a375ccb,
+        type: 3}
       propertyPath: playerTransform
       value: 
       objectReference: {fileID: 723220192}
@@ -426,31 +436,5 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1858306506010644207, guid: d41c89304845757499410a4cd98907d6,
-        type: 3}
-      propertyPath: test1
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1858306506010644207, guid: d41c89304845757499410a4cd98907d6,
-        type: 3}
-      propertyPath: test2
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1858306506010644207, guid: d41c89304845757499410a4cd98907d6,
-        type: 3}
-      propertyPath: test3
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1858306506010644207, guid: d41c89304845757499410a4cd98907d6,
-        type: 3}
-      propertyPath: test4
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1858306506252719487, guid: d41c89304845757499410a4cd98907d6,
-        type: 3}
-      propertyPath: m_Icon
-      value: 
-      objectReference: {fileID: 1206586993520771344, guid: 0000000000000000d000000000000000,
-        type: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d41c89304845757499410a4cd98907d6, type: 3}
