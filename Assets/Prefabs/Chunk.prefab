@@ -122,3 +122,10 @@ MonoBehaviour:
   - asset: {fileID: 2153651534049147014, guid: 402317963b1f26140ad90090823a96fa, type: 3}
     weight: 0.24999999
     last: 0.24999999
+  globalScale: 0.2
+  minTreeScale: 1
+  maxTreeScale: 1.5
+  minGrassScale: 0.6
+  maxGrassScale: 1.1
+  grassLimit: 0.05
+  treeLimit: 0.15

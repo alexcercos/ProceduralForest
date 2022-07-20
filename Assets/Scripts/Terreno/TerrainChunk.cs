@@ -226,7 +226,8 @@ public class TerrainChunk : MonoBehaviour
 
     void CreateNewObject(float minScale, float maxScale, float totalValue, float pseudoRand, Vector3 spPosition, ref TerrainObject[] list)
     {
-        float s = (minScale + totalValue + pseudoRand % (maxScale - minScale)) * globalScale;
+        float s = (minScale + totalValue) * globalScale;
+        if (maxScale > minScale) s += (pseudoRand % (maxScale - minScale)) * globalScale;
 
         GameObject instance = GetInstanceFromList(pseudoRand % 1f, ref list);
         if (instance == null) return;
