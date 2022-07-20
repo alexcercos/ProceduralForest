@@ -137,6 +137,9 @@ MonoBehaviour:
   cameraTransform: {fileID: 1858306506252719482}
   minZoomTransform: {fileID: 2548377902430362965}
   maxZoomTransform: {fileID: 8862596819482631888}
+  zoomLevel: 2
+  totalZoomLevels: 5
+  angularSpeed: 10
 --- !u!1 &1858306506252719487
 GameObject:
   m_ObjectHideFlags: 0

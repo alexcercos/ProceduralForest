@@ -13,13 +13,20 @@ public class CameraMovement : MonoBehaviour
     Vector3 lastHit;
     bool isMoving;
 
-    int zoomLevel = 5;
+    Vector2 lastMousePos;
 
-    int totalZoomLevels = 15;
+    public int zoomLevel = 2;
+    public int totalZoomLevels = 5;
+
+    public float angularSpeed = 10f;
 
     void Start()
     {
+        lastMousePos = Vector2.zero;
+
         isMoving = false;
+        lastHit = Vector3.zero;
+
         UpdateZoomPosition();
     }
 
@@ -27,9 +34,18 @@ public class CameraMovement : MonoBehaviour
     void Update()
     {
         if (Input.GetMouseButton(0))
-            UpdatePosition();
+        {
+            if (Input.GetKey(KeyCode.LeftControl))
+                UpdateRotation();
+            else
+                UpdatePosition();
+        }
         else
+        {
             isMoving = false;
+            lastMousePos = Vector2.zero;
+        }
+            
 
         if (Input.mouseScrollDelta.y != 0)
             UpdateZoom(Input.mouseScrollDelta.y > 0);
@@ -44,10 +60,10 @@ public class CameraMovement : MonoBehaviour
         {
             Vector3 rel_hit = hit.point - transform.position;
             rel_hit.y = 0;
+
             if (isMoving)
-            {
                 transform.position += (lastHit - rel_hit);
-            }
+            
 
             lastHit = rel_hit;
             isMoving = true;
@@ -67,5 +83,19 @@ public class CameraMovement : MonoBehaviour
         float lerp = zoomLevel / ((float)totalZoomLevels);
         cameraTransform.position = Vector3.Lerp(minZoomTransform.position, maxZoomTransform.position, lerp);
         cameraTransform.rotation = Quaternion.Slerp(minZoomTransform.rotation, maxZoomTransform.rotation, lerp);
+    }
+
+    void UpdateRotation()
+    {
+        Vector3 mouse = Input.mousePosition;
+
+        if (lastMousePos != Vector2.zero)
+        {
+            float curr_rotation = angularSpeed * (mouse.x - lastMousePos.x)/10f;
+
+            transform.Rotate(0f, curr_rotation, 0f);
+        }
+
+        lastMousePos = mouse;
     }
 }
